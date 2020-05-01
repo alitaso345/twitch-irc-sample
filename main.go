@@ -31,11 +31,15 @@ func main() {
 
 	channel := os.Args[1]
 	con.AddCallback("001", func(e *irc.Event) { con.Join(channel) })
-	con.AddCallback("PRIVMSG", func(e *irc.Event) { fmt.Printf("[twitch]%s: %s\n", e.User, e.Arguments[1]) })
+	con.AddCallback("PRIVMSG", printMessage)
 	err := con.Connect(serverssl)
 	if err != nil {
 		fmt.Printf("Err %s", err)
 		return
 	}
 	con.Loop()
+}
+
+func printMessage(e *irc.Event) {
+	fmt.Printf("[twitch]%s: %s\n", e.User, e.Arguments[1])
 }
